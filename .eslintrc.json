@@ -6,7 +6,10 @@
   },
   "extends": ["airbnb-base"],
   "parserOptions": {
-    "ecmaVersion": 2015
+    "ecmaVersion": 2015,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
   },
   "rules": {
     "comma-dangle": "warn",

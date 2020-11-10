@@ -24,6 +24,7 @@
     "prettier-eslint": "^11.0.0"
   },
   "dependencies": {
+    "webpack": "^4.20.2",
     "yargs": "^16.0.3"
   }
 }

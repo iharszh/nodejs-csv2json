@@ -1,8 +1,36 @@
 const { argv } = require('yargs');
-const ReadableStream = require('./readStream');
-const WritableStream = require('./writeStream');
+const path = require('path');
+const fs = require('fs');
+const CsvToJson = require('./csvtojson');
 
-const readStream = new ReadableStream(argv.sourceFile);
-const writeStream = new WritableStream(argv.outputFile);
+const { sourceFile, outputFile, delimiter } = argv;
 
-readStream.pipe(writeStream);
+if (!sourceFile) {
+  throw new Error('source file not provided');
+}
+
+if (!outputFile) {
+  throw new Error('output file not provided');
+}
+
+const readable = fs
+  .createReadStream(path.resolve(__dirname, sourceFile))
+  .on('error', (err) => {
+    console.log('reading error', err);
+  })
+  .on('end', () => {
+    console.log('done reading');
+  });
+
+const writable = fs
+  .createWriteStream(path.resolve(__dirname, outputFile))
+  .on('error', (err) => {
+    console.log('writing error', err);
+  })
+  .on('finish', () => {
+    console.log('done writing');
+  });
+
+const csvToJsonTransform = new CsvToJson({ delimiter });
+
+readable.pipe(csvToJsonTransform).pipe(writable);
